@@ -1,0 +1,28 @@
+
+h1,h2,h3,p{
+  color: aliceblue;
+}
+.img{
+  display: block;
+  width: 100px;
+  height: 100px;
+  left: 4px;
+  top: 0px;
+  border-radius: 50%;
+}
+.list-group-item *{
+  display: block;
+
+}
+.list-group-item{
+  display: flex;
+  border: none;
+  background-color: #FFFF;
+}
+.list-group-item :hover{
+  background-color: #FFFF !important;
+}
+
+
+
+ 
