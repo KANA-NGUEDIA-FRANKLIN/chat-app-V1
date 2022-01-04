@@ -98,23 +98,9 @@ export class GooMainComponent implements OnInit {
     this.myDiscuss = new discussion( date_sent , this.messageText);
     // this.discusService.onSaveSms(this.selectedUser._id, this.myDiscuss);
     //this.discusService.getSms(this.mySms);
-
+    this.selectedUser.discuss = this.myDiscuss
     this.http
-    .put<any>('http://localhost:3000/contacts/' + this.selectedUser._id ,
-    {
-    discuss :{
-    endpoint:"2020-06-05T23:00:00.000Z",
-      sms: [
-          {
-              content: "lorem dhfksdfsdfsdf ca marche bien",
-              type_send: true,
-              date_send: "2009-12-07T23:00:00.000Z",
-              _id: "61d479e8b9b67ab17213b13a"
-          }
-        
-      ]
-  }}
-    )
+    .put<any>('http://localhost:3000/contacts/' + this.selectedUser._id, this.selectedUser)
     .subscribe(
       (reponse) => {
         console.log(reponse);
