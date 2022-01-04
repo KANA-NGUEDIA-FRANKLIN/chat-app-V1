@@ -149,6 +149,7 @@ postContact(contact:contact){
         console.log('Erreur ! : ' + error);
       }
     )
+    this.getContacts()
    
 }
 
@@ -199,23 +200,23 @@ createNewContact(newContact: contact){
  this.postContact(newContact)
  this.emitContacts();
  window.alert(this.emitContacts());
- window.alert(this.emitContacts());
- console.log(this.saveContacts());
+//  console.log(this.saveContacts());
 }
 
 removeContact(contact: contact){
  
- const contactIndexToRemove = this.contacts.findIndex(
+ /* const contactIndexToRemove = this.contacts.findIndex(
    (contactEl):any =>{
        if(contactEl === contact){
          return true;
        }
    }
- ); 
+ );  */
  this.http
-     .request('delete','http://localhost:3000/contacts/' + contactIndexToRemove, {body: { id: contact._id} })
+     .request('delete','http://localhost:3000/contacts/' + contact._id)
      .subscribe(
        (reponse) => {
+         console.log(reponse)
        },
        (error) => {
          console.log('Erreur ! : ' + error);
@@ -224,8 +225,9 @@ removeContact(contact: contact){
 
  
  /* this.contacts.splice(contactIndexToRemove,1);*/
- this.saveContacts();
- this.emitContacts(); 
+//  this.saveContacts();
+ this.emitContacts();
+ this.getContacts() 
 }
 
 uploadFile(file : File){
