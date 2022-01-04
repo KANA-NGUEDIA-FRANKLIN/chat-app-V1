@@ -33,11 +33,13 @@ export class DiscusViewComponent implements OnInit {
   ngOnInit(): void {
       this.myContact = new contact('','',0,'','',undefined);
       const id = this.route.snapshot.params['id'];
-      this.contactsService.getSingleContact(+id).then(
-        (myCont:any)=>{
-          this.myContact = <contact> myCont;
-        }
-      );
+      this.contactsService.getSingleContact(+id);
+      this.myContact = <contact>  this.contactsService.getSingleContact(+id);
+      // .then(
+      //   (myCont:any)=>{
+      //     this.myContact = <contact> myCont;
+      //   }
+      // );
     this.mySms= new sms(this.sms_content,this.sms_received,this.sms_sent,formatDate(Date.now(), 'yyyy-mm-dd hh:ii:ss','en-US'));
     // this.discusService.getSms(this.mySms);
     // console.log(this.discusService.getSms(this.mySms));

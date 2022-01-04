@@ -13,7 +13,7 @@
         >
         
           <img [src]="user.photo"
-               [alt]="user?.firstname"
+               [alt]="user.firstname"
                class="avatar"
           />
           <p class="username">{{user?.firstname}}</p>
@@ -41,7 +41,10 @@
             <div 
                  
             >
-              <p class="message-container"><app-sms></app-sms></p>
+              <p class="message-container"   *ngFor="let sms of messageText ; let i = index">
+                <!-- <app-sms></app-sms> -->
+                {{sms.content}}
+              </p>
               
             </div>
           </div>

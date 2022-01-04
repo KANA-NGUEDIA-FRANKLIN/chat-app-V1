@@ -20,11 +20,12 @@ export class ContactViewComponent implements OnInit {
   ngOnInit(): void {
     this.myContact = new contact('','',0,'','',undefined);
     const id = this.route.snapshot.params['id'];
-    this.ContactsService.getSingleContact(+id).then(
-      (myCont:any)=>{
-        this.myContact = <contact> myCont;
-      }
-    );
+    this.ContactsService.getSingleContact(+id)
+    // .then(
+    //   (myCont:any)=>{
+    //     this.myContact = <contact> myCont;
+    //   }
+    // );
   }
 
   onBack(){

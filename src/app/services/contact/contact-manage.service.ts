@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { contact } from 'src/app/models/contact.model';
 import {AngularFireDatabase} from '@angular/fire/database'
 import { AngularFireStorage} from "@angular/fire/storage";
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class ContactManageService {
   contactSelected = new Subject<contact>();
   constructor(private afdBase: AngularFireDatabase,
               public firestore : AngularFireStorage,
+              private http : HttpClient
             ) { }
 
   emitContacts(){
@@ -22,78 +24,228 @@ export class ContactManageService {
 
   //methode enregistrer les livres dans la base de donnees
 
-  saveContacts(){
-     this.afdBase.database.ref("/contacts").set(this.contacts);
-    // console.log( this.afdBase.database.ref('/contacts').set(this.contacts));
+//   saveContacts(){
+//      this.afdBase.database.ref("/contacts").set(this.contacts);
+//     // console.log( this.afdBase.database.ref('/contacts').set(this.contacts));
+   
+// }
+
+//   getContacts(){ //recupeerer la liste des contacts
+//     this.afdBase.database.ref('/contacts').on('value',(data)=>{
+//       this.contacts=data.val() ? data.val() : [];
+//       this.emitContacts();
+//     });
+//   }
+
+//   //retourner un seul contact 
+//   getSingleContact(id: number){
+//     return new Promise(
+//       (resolve,reject)=>{
+//         this.afdBase.database.ref('/contacts/'+ id).once('value').then(
+//           (data)=>{
+//             resolve(data.val());
+//           },(error)=>{
+//             reject(error);
+//           }
+//         );
+//       }
+//     );
+//   }
+
+//   //creation d'un contact
+//   createNewContact(newContact: contact){
+//     window.alert(newContact);
+//     console.log(newContact);
+//     this.contacts.push(newContact);
+//     this.saveContacts();
+//     this.emitContacts();
+//     window.alert(this.emitContacts());
+//     window.alert(this.emitContacts());
+//     console.log(this.saveContacts());
+//   }
+
+//   removeContact(contact: contact){
+  
+//     const contactIndexToRemove = this.contacts.findIndex(
+//       (contactEl):any =>{
+//           if(contactEl === contact){
+//             return true;
+//           }
+//       }
+//     ); 
+//     this.contacts.splice(contactIndexToRemove,1);
+//     this.saveContacts();
+//     this.emitContacts();
+//   }
+
+//   uploadFile(file : File){
+//     return new Promise(
+//       (resolve,reject)=>{
+//         const almostUniqueFileName= Date.now().toString();
+//         const upload = this.firestore.storage.ref().child('images/'+ almostUniqueFileName+file.name).put(file);
+        
+//         upload.on('state_changed', 
+//           ()=>{
+//             console.log('chargement');
+//           },(error)=>{
+//               console.log('Erreur de chargement:' +error);
+//               reject()
+//           },
+//           ()=>{
+//             resolve(upload.snapshot.ref.getDownloadURL())
+//           }
+//         )
+     
+//       })
+// }
+
+
+saveContacts(){
+  /* this.afdBase.database.ref("/contacts").set(this.contacts); */
+
+  let contact
+  for(let i = 0; i<this.contacts.length;i++){
+    contact = this.contacts[i]
+    if(contact._id){
+     this.http
+     .put<any>('http://localhost:3000/contacts/' + i , contact)
+     .subscribe(
+       (reponse) => {
+         console.log(reponse);
+       },
+       (error) => {
+         console.log('Erreur ! : ' + error);
+       }
+     )
+
+     console.log('tous les contacts',contact);
+     
+   }
+    if(true){
+     this.http
+     .post<any>('http://localhost:3000/contacts', contact )
+     .subscribe(
+       (reponse) => {
+         console.log(reponse);
+       },
+       (error) => {
+         console.log('Erreur ! : ' + error);
+       }
+     )
+    }
+  }
+ // console.log( this.afdBase.database.ref('/contacts').set(this.contacts));
+
+}
+postContact(contact:contact){
+  
+    this.http
+    .post<any>('http://localhost:3000/contacts', contact )
+    .subscribe(
+      (reponse) => {
+        console.log(reponse);
+      },
+      (error) => {
+        console.log('Erreur ! : ' + error);
+      }
+    )
    
 }
 
-  getContacts(){ //recupeerer la liste des contacts
-    this.afdBase.database.ref('/contacts').on('value',(data)=>{
-      this.contacts=data.val() ? data.val() : [];
-      this.emitContacts();
-    });
-  }
+getContacts(){ //recupeerer la liste des contacts
+ /* this.afdBase.database.ref('/contacts').on('value',(data)=>{
+   this.contacts=data.val() ? data.val() : [];
+   this.emitContacts();
+ }); */
+ this.http
+     .get<any>('http://localhost:3000/contacts')
+     .subscribe(
+       (reponse) => {
+         this.contacts = reponse;
+         this.emitContacts()
+       },
+       (error) => {
+         console.log('Erreur ! : ' + error);
+       }
+     )
 
-  //retourner un seul contact 
-  getSingleContact(id: number){
-    return new Promise(
-      (resolve,reject)=>{
-        this.afdBase.database.ref('/contacts/'+ id).once('value').then(
-          (data)=>{
-            resolve(data.val());
-          },(error)=>{
-            reject(error);
-          }
-        );
-      }
-    );
-  }
+}
 
-  //creation d'un contact
-  createNewContact(newContact: contact){
-    window.alert(newContact);
-    console.log(newContact);
-    this.contacts.push(newContact);
-    this.saveContacts();
-    this.emitContacts();
-    window.alert(this.emitContacts());
-    window.alert(this.emitContacts());
-    console.log(this.saveContacts());
-  }
+//retourner un seul contact 
+getSingleContact(id: number){
+ 
+ this.getContacts()
+ return this.contacts[id]
 
-  removeContact(contact: contact){
-  
-    const contactIndexToRemove = this.contacts.findIndex(
-      (contactEl):any =>{
-          if(contactEl === contact){
-            return true;
-          }
-      }
-    ); 
-    this.contacts.splice(contactIndexToRemove,1);
-    this.saveContacts();
-    this.emitContacts();
-  }
+ /* return new Promise(
+   (resolve,reject)=>{
+     this.afdBase.database.ref('/contacts/'+ id).once('value').then(
+       (data)=>{
+         resolve(data.val());
+       },(error)=>{
+         reject(error);
+       }
+     );
+   }
+ ); */
 
-  uploadFile(file : File){
-    return new Promise(
-      (resolve,reject)=>{
-        const almostUniqueFileName= Date.now().toString();
-        const upload = this.firestore.storage.ref().child('images/'+ almostUniqueFileName+file.name).put(file);
-        
-        upload.on('state_changed', 
-          ()=>{
-            console.log('chargement');
-          },(error)=>{
-              console.log('Erreur de chargement:' +error);
-              reject()
-          },
-          ()=>{
-            resolve(upload.snapshot.ref.getDownloadURL())
-          }
-        )
+}
+
+//creation d'un contact
+createNewContact(newContact: contact){
+ window.alert(newContact);
+ console.log(newContact);
+ this.contacts.push(newContact);
+ this.postContact(newContact)
+ this.emitContacts();
+ window.alert(this.emitContacts());
+ window.alert(this.emitContacts());
+ console.log(this.saveContacts());
+}
+
+removeContact(contact: contact){
+ 
+ const contactIndexToRemove = this.contacts.findIndex(
+   (contactEl):any =>{
+       if(contactEl === contact){
+         return true;
+       }
+   }
+ ); 
+ this.http
+     .request('delete','http://localhost:3000/contacts/' + contactIndexToRemove, {body: { id: contact._id} })
+     .subscribe(
+       (reponse) => {
+       },
+       (error) => {
+         console.log('Erreur ! : ' + error);
+       }
+     )
+
+ 
+ /* this.contacts.splice(contactIndexToRemove,1);*/
+ this.saveContacts();
+ this.emitContacts(); 
+}
+
+uploadFile(file : File){
+ return new Promise(
+   (resolve,reject)=>{
+     const almostUniqueFileName= Date.now().toString();
+     const upload = this.firestore.storage.ref().child('images/'+ almostUniqueFileName+file.name).put(file);
      
-      })
+     upload.on('state_changed', 
+       ()=>{
+         console.log('chargement');
+       },(error)=>{
+           console.log('Erreur de chargement:' +error);
+           reject()
+       },
+       ()=>{
+         resolve(upload.snapshot.ref.getDownloadURL())
+       }
+     )
+  
+   })
 }
 }

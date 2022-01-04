@@ -1,5 +1,7 @@
 export class contact{
   photo!:string
+  public _id!:string;
+  public idUser!:string;
   constructor(public firstname:string,
               public lastname:string,
               public phonenumber:number,
