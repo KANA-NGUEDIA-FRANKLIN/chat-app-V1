@@ -20,13 +20,13 @@ import { AuthService } from './services/log/auth.service';
 import { SmsManageService } from './services/sms/sms-manage.service';
 import { ContactManageService } from './services/contact/contact-manage.service';
 import { DiscussManageService } from './services/discus/discuss-manage.service';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 import { RouterModule, Routes } from '@angular/router';
 import { ContactListComponent } from './goo-main/contact-list/contact-list.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { HeaderComponent } from './header/header.component';
 import { SmsComponent } from './goo-main/sms-view/sms.component';
-
+import { AuthInterceptor } from './services/interceptor.service';
 const appRoutes: Routes = [
   {path: 'auth/signup' , component: SignUpComponent },
   {path: 'auth/signin' , component: SignInComponent },
@@ -75,7 +75,8 @@ const appRoutes: Routes = [
     AuthService,
     SmsManageService, 
     ContactManageService,
-    DiscussManageService
+    DiscussManageService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

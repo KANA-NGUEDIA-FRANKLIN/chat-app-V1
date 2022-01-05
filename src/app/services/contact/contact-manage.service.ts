@@ -4,6 +4,8 @@ import { contact } from 'src/app/models/contact.model';
 import {AngularFireDatabase} from '@angular/fire/database'
 import { AngularFireStorage} from "@angular/fire/storage";
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../log/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +17,12 @@ export class ContactManageService {
   contactSelected = new Subject<contact>();
   constructor(private afdBase: AngularFireDatabase,
               public firestore : AngularFireStorage,
-              private http : HttpClient
+              private http : HttpClient,
+              private authservice: AuthService,
+              private router: Router
             ) { }
+  
+            
 
   emitContacts(){
     this.contactSub.next(this.contacts);  
@@ -114,6 +120,7 @@ saveContacts(){
          console.log(reponse);
        },
        (error) => {
+        this.router.navigate(['/auth/signin'])
          console.log('Erreur ! : ' + error);
        }
      )
@@ -129,6 +136,7 @@ saveContacts(){
          console.log(reponse);
        },
        (error) => {
+        this.router.navigate(['/auth/signin'])
          console.log('Erreur ! : ' + error);
        }
      )
@@ -138,7 +146,6 @@ saveContacts(){
 
 }
 postContact(contact:contact){
-  
     this.http
     .post<any>('http://localhost:3000/contacts', contact )
     .subscribe(
@@ -146,6 +153,7 @@ postContact(contact:contact){
         console.log(reponse);
       },
       (error) => {
+        this.router.navigate(['/auth/signin'])
         console.log('Erreur ! : ' + error);
       }
     )
@@ -166,6 +174,7 @@ getContacts(){ //recupeerer la liste des contacts
          this.emitContacts()
        },
        (error) => {
+        
          console.log('Erreur ! : ' + error);
        }
      )
@@ -219,6 +228,7 @@ removeContact(contact: contact){
          console.log(reponse)
        },
        (error) => {
+        
          console.log('Erreur ! : ' + error);
        }
      )

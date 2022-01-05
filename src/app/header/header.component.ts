@@ -10,7 +10,8 @@ import { AuthService } from '../services/log/auth.service';
 export class HeaderComponent implements OnInit {
   isAuth!:boolean;
   constructor(private authService : AuthService,
-              private afAuth: AngularFireAuth) { }
+              private afAuth: AngularFireAuth,
+              ) { }
 
   ngOnInit(): void {
     this.afAuth.onAuthStateChanged(

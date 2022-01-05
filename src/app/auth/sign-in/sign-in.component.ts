@@ -33,14 +33,10 @@ export class SignInComponent implements OnInit {
   onSubmit(){
     const email = this.signInForm.get('email')?.value;
     const password = this.signInForm.get('password')?.value;
-    this.authservice.signInUser(email, password).then(
-      ()=>{
-        this.router.navigate(['/GooSMS']);
-      },
-      (error)=>{
-        this.errorMessage=error;
-      }
-    );
+    this.authservice.signInUser(email, password)
+    if(this.authservice.authentifie){
+      this.router.navigate(['/GooSMS']);
+    }
   }
 
 

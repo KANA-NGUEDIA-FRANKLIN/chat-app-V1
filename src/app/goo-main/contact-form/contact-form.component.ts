@@ -58,6 +58,7 @@ export class ContactFormComponent implements OnInit {
       this.contactService.uploadFile(file).then(
         (url)=>{
           this.fileUrl=<string>url;
+          console.log(this.fileUrl)
           this.fileIsUploading=false;
           this.fileUploaded=true;
         }

@@ -10,6 +10,9 @@ import { DiscussManageService } from 'src/app/services/discus/discuss-manage.ser
 import { HttpClient } from '@angular/common/http';
 import { discussion } from '../models/discuss.model';
 
+import * as data from "../../../file.json";
+
+
 @Component({
   selector: 'app-goo-main',
   templateUrl: './goo-main.component.html',
@@ -24,9 +27,9 @@ export class GooMainComponent implements OnInit {
   sms_sent!:false
   IsSending=false;
   isSent=false;
+  uri!:string;
 
   public roomId!: string;
- 
   public messageArray: { user: string, message: string }[] = [];
   private storageArray = [];
 
@@ -53,6 +56,7 @@ export class GooMainComponent implements OnInit {
   ngOnInit(): void {
       this.myContact = new contact('','',0,'','',undefined);
       const id = this.route.snapshot.params['id'];
+      console.log("heyeeeee", data)
       // this.contactsService.getSingleContact(+id).then(
       //   (myCont:any)=>{
       //     this.myContact = <contact> myCont;
@@ -126,6 +130,8 @@ export class GooMainComponent implements OnInit {
   const date_sent = formatDate(Date.now(), 'yyyy-mm-dd hh:ii:ss','en-US');
   this.selectedUser = this.userList.find(user => user.phonenumber === phone);
   this.messageText = this.selectedUser.discuss.sms;
+  var theJSON = JSON.stringify(this.selectedUser);
+  this.uri = "data:application/json;charset=UTF-8," + encodeURIComponent(theJSON);
   console.log('contact particulier', this.selectedUser);
   console.log('je cherche sms ******  ', this.messageText);
   //console.log('liste de disc',this.selectedUser.discuss.sms[0].content)
